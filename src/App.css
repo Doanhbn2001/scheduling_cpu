@@ -1,0 +1,127 @@
+.App {
+  text-align: center;
+  /* background-color: #61dafb; */
+  padding-top: 50px;
+  padding-bottom: 200px;
+  background-color: #b15965;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+label {
+  text-align: left;
+  font-weight: 700;
+}
+.title {
+  margin-top: 20px;
+  margin-bottom: 20px;
+  color: black;
+}
+form {
+  width: 80%;
+  margin: auto;
+  margin-top: 8px;
+  margin-bottom: 20px;
+}
+.col-sm-3 {
+  display: inline-block;
+}
+.col-sm-8 {
+  display: inline-block;
+}
+.body {
+  width: 70%;
+  margin: auto;
+  border: 2px #61dafb solid;
+  border-radius: 10px;
+  padding: 10px;
+  background-color: #f1eedf;
+  margin-top: 20px;
+}
+.display-process {
+  vertical-align: top;
+  /* top: 5px; */
+}
+.buttons button {
+  margin-right: 20px;
+  font-weight: 700;
+  color: black;
+}
+.display_average {
+  width: 70%;
+  margin: auto;
+  text-align: left;
+  border: #b15965 2px solid;
+  border-radius: 10px;
+  padding: 5px;
+  font-weight: 700;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+.color {
+  background-color: #b15965;
+  height: 30px;
+  border: 1px black solid;
+}
+.color_SRT {
+  background-color: #b15965;
+  height: 30px;
+}
+.col-sm-1 p {
+  margin-bottom: 0px;
+}
+.col-sm-1 {
+  display: inline-block;
+}
+.col-sm-11 {
+  display: inline-block;
+}
+.display_gantt {
+  margin-bottom: 20px;
+}
+.boder {
+  border: #61dafb 1px solid;
+}
+.boder_SRT {
+  border: #61dafb 1px solid;
+  display: flex;
+}
+.quantum {
+  width: 50%;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  margin-left: auto;
+  margin-right: auto;
+}
