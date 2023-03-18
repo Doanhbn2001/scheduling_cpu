@@ -15,6 +15,7 @@ import SJF from './component/SJF';
 import Priority from './component/Priority';
 import SRT from './component/SRT';
 import RR from './component/RR';
+import Auto from './component/Auto';
 
 function App() {
   const [name, setName] = useState('');
@@ -42,6 +43,22 @@ function App() {
   const [srt, setSRT] = useState(false);
   const [rr, setRR] = useState(false);
 
+  const [stt, setStt] = useState(0);
+  const [txhs, setTxhs] = useState(0);
+  const [txhe, setTxhe] = useState(0);
+  const [tths, setTths] = useState(0);
+  const [tthe, setTthe] = useState(0);
+  const [quant, setQuant] = useState(0);
+
+  const [validStt, setValidStt] = useState(false);
+  const [validTxhs, setValidTxhs] = useState(false);
+  const [validTxhe, setValidTxhe] = useState(false);
+  const [validTths, setValidTths] = useState(false);
+  const [validTthe, setValidTthe] = useState(false);
+  const [validQuant, setValidQuant] = useState(false);
+
+  const [auto, setAuto] = useState(false);
+
   const handleSubmit = (evt) => {
     setValidName(false);
     setValidTimeth(false);
@@ -66,7 +83,6 @@ function App() {
         }
       }
     }
-    // evt.preventdefault();
   };
 
   const handleCheck = () => {
@@ -88,6 +104,9 @@ function App() {
   };
 
   const schedulingFCFS = () => {
+    if (fcfs) {
+      return alert('Reset tiến trình để mô phỏng lại!!');
+    }
     if (process.length === 0) {
       return alert('Thêm tiến trình để mô phỏng thuật toán!');
     }
@@ -106,6 +125,10 @@ function App() {
   };
 
   const schedulingSJF = () => {
+    console.log(sjf);
+    if (sjf) {
+      return alert('Reset tiến trình để mô phỏng lại!!');
+    }
     if (process.length === 0) {
       return alert('Thêm tiến trình để mô phỏng thuật toán!');
     }
@@ -123,6 +146,9 @@ function App() {
   };
 
   const schedulingPriority = () => {
+    if (pri) {
+      return alert('Reset tiến trình để mô phỏng lại!!');
+    }
     if (process.length === 0) {
       return alert('Thêm tiến trình để mô phỏng thuật toán!');
     }
@@ -141,6 +167,9 @@ function App() {
   };
 
   const schedulingSRT = () => {
+    if (srt) {
+      return alert('Reset tiến trình để mô phỏng lại!!');
+    }
     if (process.length === 0) {
       return alert('Thêm tiến trình để mô phỏng thuật toán!');
     }
@@ -159,6 +188,9 @@ function App() {
   };
 
   const schedulingRR = () => {
+    if (rr) {
+      return alert('Reset tiến trình để mô phỏng lại!!');
+    }
     setValidQuantum(false);
     if (process.length === 0) {
       return alert('Thêm tiến trình để mô phỏng thuật toán!');
@@ -178,6 +210,51 @@ function App() {
       ]);
     });
     setRR(true);
+  };
+
+  const handleAuto = () => {
+    setValidStt(false);
+    setValidTxhs(false);
+    setValidTxhe(false);
+    setValidTths(false);
+    setValidTthe(false);
+    setValidQuant(false);
+
+    if (stt <= 0) {
+      setValidStt(true);
+    } else {
+      if (txhs < 0) {
+        setValidTxhs(true);
+      } else {
+        if (txhe <= txhs) {
+          setValidTxhe(true);
+        } else {
+          if (tths < 0) {
+            setValidTths(true);
+          } else {
+            if (tthe <= tths) {
+              setValidTthe(true);
+            } else {
+              if (quant <= 0) {
+                setValidQuant(true);
+              } else {
+                setAuto(true);
+              }
+            }
+          }
+        }
+      }
+    }
+  };
+
+  const re = () => {
+    setQuant(0);
+    setStt(0);
+    setTxhs(0);
+    setTxhe(0);
+    setTths(0);
+    setTthe(0);
+    setAuto(false);
   };
 
   return (
@@ -249,9 +326,6 @@ function App() {
             <Button color="primary" onClick={handleSubmit}>
               THÊM TIẾN TRÌNH
             </Button>
-            {/* <Button color="primary" onClick={handleCheck}>
-              check
-            </Button> */}
           </Form>
         </Col>
         <Col sm={8} className="display-process">
@@ -279,7 +353,6 @@ function App() {
               })}
             </tbody>
           </Table>
-          {/* <p>{process}</p> */}
         </Col>
         <h1 className="title">Chọn thuật toán lập lịch CPU</h1>
         <div className="buttons">
@@ -326,6 +399,133 @@ function App() {
       {pri ? <Priority process_Priority={process_Priority} /> : <div></div>}
       {srt ? <SRT process_SRT={process_SRT} /> : <div></div>}
       {rr ? <RR process_RR={process_RR} quantum={quantum} /> : <div></div>}
+      <div className="body">
+        <h1 className="title">Mô phỏng với tiến trình ngẫu nhiên</h1>
+        <Form>
+          <FormGroup row={true}>
+            <Col sm={4}>
+              <Label for="stt" className="label">
+                Nhập số tiến trình
+              </Label>
+            </Col>
+            <Col sm={2}>
+              <Input
+                type="number"
+                name="stt"
+                id="stt"
+                value={stt}
+                onChange={(evt) => {
+                  setStt(evt.target.value);
+                }}
+                invalid={validStt}
+              />
+            </Col>
+          </FormGroup>
+          <FormGroup row={true}>
+            <Col sm={4}>
+              <Label>Nhập khoảng thời gian xuất hiện</Label>
+            </Col>
+            <Col sm={2}>
+              <Input
+                type="number"
+                name="txhs"
+                id="txhs"
+                value={txhs}
+                onChange={(evt) => {
+                  setTxhs(evt.target.value);
+                }}
+                invalid={validTxhs}
+              />
+            </Col>
+            <Col sm={2}>
+              <Label>đến</Label>
+            </Col>
+            <Col sm={2}>
+              <Input
+                type="number"
+                name="txhe"
+                id="txhe"
+                value={txhe}
+                onChange={(evt) => {
+                  setTxhe(evt.target.value);
+                }}
+                invalid={validTxhe}
+              />
+            </Col>
+          </FormGroup>
+          <FormGroup row={true}>
+            <Col sm={4}>
+              <Label>Nhập khoảng thực hiện</Label>
+            </Col>
+            <Col sm={2}>
+              <Input
+                type="number"
+                name="tths"
+                id="tths"
+                value={tths}
+                onChange={(evt) => {
+                  setTths(evt.target.value);
+                }}
+                invalid={validTths}
+              />
+            </Col>
+            <Col sm={2}>
+              <Label>đến</Label>
+            </Col>
+            <Col sm={2}>
+              <Input
+                type="number"
+                name="tthe"
+                id="tthe"
+                value={tthe}
+                onChange={(evt) => {
+                  setTthe(evt.target.value);
+                }}
+                invalid={validTthe}
+              />
+            </Col>
+          </FormGroup>
+          <FormGroup row={true}>
+            <Col sm={4}>
+              <Label for="quant" className="label">
+                Nhập giá trị quantum
+              </Label>
+            </Col>
+            <Col sm={2}>
+              <Input
+                type="number"
+                name="quant"
+                id="quant"
+                value={quant}
+                onChange={(evt) => {
+                  setQuant(evt.target.value);
+                }}
+                invalid={validQuant}
+              />
+            </Col>
+          </FormGroup>
+          <div className="buttons">
+            <Button color="warning" onClick={handleAuto}>
+              Simulate
+            </Button>
+            <Button color="danger" onClick={re}>
+              Reset
+            </Button>
+          </div>
+        </Form>
+        {auto ? (
+          <Auto
+            stt={stt}
+            txhs={txhs}
+            txhe={txhe}
+            tths={tths}
+            tthe={tthe}
+            quantum={quant}
+          />
+        ) : (
+          <div></div>
+        )}
+      </div>
     </div>
   );
 }

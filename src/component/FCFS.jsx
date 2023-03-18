@@ -5,8 +5,6 @@ import { SortProcess } from './sortProcess';
 const FCFS = ({ process_FCFS }) => {
   const [totalTimePresence, setTotalTimePresenct] = useState(0);
   const [toatlTimeWait, setTotalTimeWait] = useState(0);
-  // let totalTimePresence = 0;
-  // let toatlTimeWait = 0;
 
   useEffect(() => {
     SortProcess(process_FCFS);

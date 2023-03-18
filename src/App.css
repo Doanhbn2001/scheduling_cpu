@@ -58,6 +58,9 @@ form {
 .col-sm-3 {
   display: inline-block;
 }
+label {
+  vertical-align: middle;
+}
 .col-sm-8 {
   display: inline-block;
 }
@@ -79,6 +82,7 @@ form {
   font-weight: 700;
   color: black;
 }
+
 .display_average {
   width: 70%;
   margin: auto;
