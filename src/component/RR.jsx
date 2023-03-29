@@ -45,6 +45,7 @@ const RR = ({ process_RR, quantum }) => {
       const oldTime = timeCount;
       if (quere.length !== 0 && index <= quere.length - 1) {
         let stt = quere[index];
+
         if (remainTimeArr[stt] <= quantum) {
           timeCount += remainTimeArr[stt];
           new_RR[stt].timeEnd = timeCount;
@@ -116,7 +117,6 @@ const RR = ({ process_RR, quantum }) => {
     setTotalTimePresenct(parseFloat(presence / number).toFixed(5));
     setTotalTimeWait(parseFloat(wait / number).toFixed(5));
     setTotal(totalTime);
-    console.log(process_RR);
   }, []);
   const gantt = (g) => {
     if (!g.gantt || total === 0) {

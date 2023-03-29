@@ -220,22 +220,22 @@ function App() {
     setValidTthe(false);
     setValidQuant(false);
 
-    if (stt <= 0) {
+    if (Number(stt) <= 0) {
       setValidStt(true);
     } else {
-      if (txhs < 0) {
+      if (Number(txhs) < 0) {
         setValidTxhs(true);
       } else {
-        if (txhe <= txhs) {
+        if (Number(txhe) <= Number(txhs)) {
           setValidTxhe(true);
         } else {
-          if (tths < 0) {
+          if (Number(tths) < 0) {
             setValidTths(true);
           } else {
-            if (tthe <= tths) {
+            if (Number(tthe) <= Number(tths)) {
               setValidTthe(true);
             } else {
-              if (quant <= 0) {
+              if (Number(quant) <= 0) {
                 setValidQuant(true);
               } else {
                 setAuto(true);

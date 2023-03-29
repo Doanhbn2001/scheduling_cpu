@@ -9,6 +9,8 @@ import {
   CartesianGrid,
   Tooltip,
   Legend,
+  BarChart,
+  Bar,
 } from 'recharts';
 
 const Auto = ({ stt, txhs, txhe, tths, tthe, quantum }) => {
@@ -18,16 +20,31 @@ const Auto = ({ stt, txhs, txhe, tths, tthe, quantum }) => {
 
   let w_fcfs = 0;
   let p_fcfs = 0;
+  let wf_fcfs = 0;
+  let count_fcfs = stt;
+
   let w_sjf = 0;
   let p_sjf = 0;
+  let wf_sjf = 0;
+  let count_sjf = stt;
 
   let w_srt = 0;
   let p_srt = 0;
+  let wf_srt = 0;
+  let count_srt = 0;
+
   let w_rr = 0;
   let p_rr = 0;
+  let wf_rr = 0;
+  let count_rr = 0;
 
-  const [data, setData] = useState([]);
+  const [data1, setData1] = useState([]);
+  const [data2, setData2] = useState([]);
+  const [data3, setData3] = useState([]);
+  const [data4, setData4] = useState([]);
 
+  //////////////////////////
+  ////////////////////////////////FCFS
   const fcfs = (process) => {
     const process_FCFS = [];
     process.forEach((p) => {
@@ -52,8 +69,11 @@ const Auto = ({ stt, txhs, txhe, tths, tthe, quantum }) => {
 
     w_fcfs = parseFloat(wait / stt).toFixed(2);
     p_fcfs = parseFloat(presence / stt).toFixed(2);
+    wf_fcfs = w_fcfs;
   };
 
+  //////////////////////////
+  ///////////////////////////SJF
   const sjf = (process) => {
     const process_SJF = [];
     let totalTime = process[0].timexh + process[0].timeth;
@@ -103,8 +123,11 @@ const Auto = ({ stt, txhs, txhe, tths, tthe, quantum }) => {
 
     w_sjf = parseFloat(wait / stt).toFixed(2);
     p_sjf = parseFloat(presence / stt).toFixed(2);
+    wf_sjf = w_sjf;
   };
 
+  //////////////////////////
+  //////////////////////SRT
   const srt = (process) => {
     const process_SRT = [];
     let timeCount = 0;
@@ -118,9 +141,12 @@ const Auto = ({ stt, txhs, txhe, tths, tthe, quantum }) => {
     });
     let saveProcess = 0;
     const remainTimeArr = [];
+    const firstTime = [];
     let maxProcessOccurred = 0;
+    let countt = 1;
     process_SRT.forEach((p) => {
       remainTimeArr.push(p.timeth);
+      firstTime.push(-1);
     });
     while (timeCount <= totalTime) {
       maxProcessOccurred = 0;
@@ -138,8 +164,13 @@ const Auto = ({ stt, txhs, txhe, tths, tthe, quantum }) => {
             minRemainTime = remainTimeArr[i];
           }
         }
+
         if (saveProcess !== sttProcessMin || timeCount === totalTime) {
           saveProcess = sttProcessMin;
+          countt++;
+        }
+        if (firstTime[saveProcess] === -1) {
+          firstTime[saveProcess] = timeCount - process_SRT[saveProcess].timexh;
         }
         remainTimeArr[sttProcessMin]--;
         timeCount++;
@@ -158,10 +189,15 @@ const Auto = ({ stt, txhs, txhe, tths, tthe, quantum }) => {
       presence += p.timeEnd - p.timexh;
       wait += p.timeEnd - p.timexh - p.timeth;
     });
+    const totalFirstTime = firstTime.reduce((acc, cur) => acc + cur, 0);
     w_srt = parseFloat(wait / stt).toFixed(2);
     p_srt = parseFloat(presence / stt).toFixed(2);
+    wf_srt = parseFloat(totalFirstTime / stt).toFixed(2);
+    count_srt = countt;
   };
 
+  //////////////////////////
+  //////////////////////RR
   const rr = (process) => {
     const quantumRR = Number(quantum);
     const process_RR = [];
@@ -176,9 +212,12 @@ const Auto = ({ stt, txhs, txhe, tths, tthe, quantum }) => {
     });
     const remainTimeArr = [];
     const timeLandmarkArr = [];
+    const firstTime = [];
+    let countt = 1;
     process_RR.forEach((p) => {
       remainTimeArr.push(p.timeth);
       timeLandmarkArr.push(p.timexh);
+      firstTime.push(-1);
     });
     timeLandmarkArr.push(totalTime);
     const quere = [];
@@ -190,6 +229,14 @@ const Auto = ({ stt, txhs, txhe, tths, tthe, quantum }) => {
       const oldTime = timeCount;
       if (quere.length !== 0 && index <= quere.length - 1) {
         let stt = quere[index];
+        if (index != 0) {
+          if (quere[index] !== quere[index - 1]) {
+            countt++;
+          }
+        }
+        if (firstTime[stt] === -1) {
+          firstTime[stt] = timeCount - process_RR[stt].timexh;
+        }
         if (remainTimeArr[stt] <= quantumRR) {
           timeCount += remainTimeArr[stt];
           process_RR[stt].timeEnd = timeCount;
@@ -237,8 +284,11 @@ const Auto = ({ stt, txhs, txhe, tths, tthe, quantum }) => {
       wait += p.timeEnd - p.timexh - p.timeth;
     });
 
+    const totalFirstTime = firstTime.reduce((acc, cur) => acc + cur, 0);
+    wf_rr = parseFloat(totalFirstTime / stt).toFixed(2);
     w_rr = parseFloat(wait / stt).toFixed(2);
     p_rr = parseFloat(presence / stt).toFixed(2);
+    count_rr = countt;
   };
 
   useEffect(() => {
@@ -255,25 +305,86 @@ const Auto = ({ stt, txhs, txhe, tths, tthe, quantum }) => {
     srt(process);
     rr(process);
 
-    setData([
+    setData1([
       {
         name: 'fcfs',
         wait: Number(w_fcfs),
+        fwait: Number(wf_fcfs),
         presence: Number(p_fcfs),
       },
       {
         name: 'sjf',
         wait: Number(w_sjf),
+        fwait: Number(wf_sjf),
         presence: Number(p_sjf),
       },
       {
         name: 'srt',
         wait: Number(w_srt),
+        fwait: Number(wf_srt),
         presence: Number(p_srt),
       },
       {
         name: 'rr',
         wait: Number(w_rr),
+        fwait: Number(wf_rr),
+        presence: Number(p_rr),
+      },
+    ]);
+
+    // setData2([
+    //   {
+    //     name: 'fcfs',
+    //     fwait: Number(wf_fcfs),
+    //   },
+    //   {
+    //     name: 'sjf',
+    //     fwait: Number(wf_sjf),
+    //   },
+    //   {
+    //     name: 'srt',
+    //     fwait: Number(wf_srt),
+    //   },
+    //   {
+    //     name: 'rr',
+    //     fwait: Number(wf_rr),
+    //   },
+    // ]);
+
+    // setData3([
+    //   {
+    //     name: 'fcfs',
+    //     count: Number(count_fcfs),
+    //   },
+    //   {
+    //     name: 'sjf',
+    //     count: Number(count_sjf),
+    //   },
+    //   {
+    //     name: 'srt',
+    //     count: Number(count_srt),
+    //   },
+    //   {
+    //     name: 'rr',
+    //     count: Number(count_rr),
+    //   },
+    // ]);
+
+    setData4([
+      {
+        name: 'fcfs',
+        presence: Number(p_fcfs),
+      },
+      {
+        name: 'sjf',
+        presence: Number(p_sjf),
+      },
+      {
+        name: 'srt',
+        presence: Number(p_srt),
+      },
+      {
+        name: 'rr',
         presence: Number(p_rr),
       },
     ]);
@@ -281,19 +392,59 @@ const Auto = ({ stt, txhs, txhe, tths, tthe, quantum }) => {
 
   return (
     <div>
-      <div>
-        <h1>Biểu đồ thời gian chờ trung bình,thời gian tồn tại trung bình</h1>
-        <ResponsiveContainer width="100%" aspect={3}>
-          <LineChart data={data} margin={{ right: 200, left: 100, top: 50 }}>
+      <div className="bieudo">
+        <p>
+          <b>
+            Số tiến trình: {stt};Khoảng thời gian xuất hiện: {txhs} - {txhe}{' '}
+            ;Khoảng thời gian thực hiện: {tths}-{tthe};Giá trị quantum:{' '}
+            {quantum}
+          </b>
+        </p>
+        {/* <h1>Biểu đồ thời gian trung bình</h1> */}
+        <ResponsiveContainer width="80%" aspect={3}>
+          <BarChart data={data1} margin={{ right: 200, left: 100 }}>
             <CartesianGrid />
             <XAxis dataKey="name" interval={'preserveStartEnd'} />
             <YAxis></YAxis>
             <Legend />
             <Tooltip />
-            <Line dataKey="wait" stroke="black" activeDot={{ r: 8 }} />
-            <Line dataKey="presence" stroke="red" activeDot={{ r: 8 }} />
-          </LineChart>
+            {/* <Line dataKey="wait" stroke="black" activeDot={{ r: 8 }} /> */}
+            <Bar dataKey="wait" fill="#000022" />
+            <Bar dataKey="fwait" fill="#770000" />
+            <Bar dataKey="presence" fill="#6600FF" />
+            {/* <Line dataKey="presence" stroke="red" activeDot={{ r: 8 }} />
+            <Line dataKey="fwait" stroke="blue" activeDot={{ r: 8 }} /> */}
+          </BarChart>
         </ResponsiveContainer>
+        <div className="bd">
+          <p>
+            <b>wait: Thời gian chờ trung bình.</b>
+          </p>
+          <p>
+            <b>fwait: Thời gian chờ đáp ứng trung bình.</b>
+          </p>
+          <p>
+            <b>presence: Thời gian hiện diện trung bình.</b>
+          </p>
+        </div>
+      </div>
+      <div className="bieudo">
+        {/* <h1>Biểu đồ số lần chuyển tiến trình cấp phát CPU</h1> */}
+        <ResponsiveContainer width="80%" aspect={3}>
+          <BarChart data={data3} margin={{ right: 200, left: 100 }}>
+            <CartesianGrid />
+            <XAxis dataKey="name" interval={'preserveStartEnd'} />
+            <YAxis></YAxis>
+            <Legend />
+            <Tooltip />
+            <Bar dataKey="count" fill="#004400" />
+          </BarChart>
+        </ResponsiveContainer>
+        <div className="bd1">
+          <p>
+            <b>count: Số lần chuyển tiến trình cấp phát CPU.</b>
+          </p>
+        </div>
       </div>
     </div>
   );

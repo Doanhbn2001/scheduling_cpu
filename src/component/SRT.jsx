@@ -32,17 +32,15 @@ const SRT = ({ process_SRT }) => {
     let i = 0;
     let maxProcessOccurred = 0;
     let timeG = new_SRT[0].timexh;
-
     process_SRT.forEach((p) => {
       remainTimeArr.push(p.timeth);
       timeLandmarkArr.push(p.timexh);
       timeGantt.push([]);
     });
     timeLandmarkArr.push(totalTime);
-
     while (
-      timeCount <= totalTime &&
-      timeCount <= timeLandmarkArr[saveSttTimeLandmark]
+      timeCount <= totalTime
+      // timeCount <= timeLandmarkArr[saveSttTimeLandmark]
     ) {
       maxProcessOccurred = 0;
       process_SRT.forEach((p, i) => {
@@ -77,9 +75,14 @@ const SRT = ({ process_SRT }) => {
       } else {
         timeCount++;
       }
-      if (timeCount > timeLandmarkArr[saveSttTimeLandmark]) {
-        saveSttTimeLandmark++;
-      }
+      // if (timeCount > timeLandmarkArr[saveSttTimeLandmark]) {
+      //   // console.log(
+      //   //   timeLandmarkArr[saveSttTimeLandmark],
+      //   //   timeCount,
+      //   //   saveProcess
+      //   // );
+      //   saveSttTimeLandmark++;
+      // }
     }
 
     timeGantt.forEach((t) => {
